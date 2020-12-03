@@ -1,15 +1,17 @@
 include forth-libs/string.fs
 
+: xy>i ( x width y -- y * width + x ) * + ;
+
 : count-encounters ( right down width map -- count )
   { right down width map }
 
   0 { count }
   right down { x y }
   begin
-    y width * x +
+    x width y xy>i
     map string:length@ <
   while
-    y width * x + { i }
+    x width y xy>i { i }
     map i string:nth { c }
 
     [char] # c = if
