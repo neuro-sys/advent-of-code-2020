@@ -2,11 +2,10 @@ include forth-libs/string.fs
 
 : xy>i ( x width y -- y * width + x ) * + ;
 
-: count-encounters ( right down width map -- count )
-  { right down width map }
-
-  0 { count }
+: count-encounters { right down width map -- count }
+  0          { count }
   right down { x y }
+
   begin
     x width y xy>i
     map string:length@ <
@@ -26,14 +25,11 @@ include forth-libs/string.fs
 ;
 
 \ Loads the terrain map into map as a string
-: load-map ( filename -- map width )
-  { filename }
-  256 { bufsiz }
+: load-map { filename -- map width }
+  256                   { bufsiz }
   bufsiz allocate throw { line-buf }
-
-  s" " string:make { map }
-
-  0 { width }
+  s" " string:make      { map }
+  0                     { width }
 
   filename string:raw r/o open-file throw { fd }
   begin
@@ -42,19 +38,15 @@ include forth-libs/string.fs
     { readn }
 
     width 0= if readn to width then
-
     line-buf readn string:make { line }
-
     map line string:append to map
   repeat drop \ readn
 
  map width
 ;
 
-: answer ( right down -- encounters )
-  { right down }
+: answer { right down -- encounters }
   s" day3-input.txt" string:make load-map { map width }
-
   right down width map count-encounters
 ;
 
