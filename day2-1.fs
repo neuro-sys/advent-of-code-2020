@@ -1,17 +1,13 @@
 require forth-libs/list.fs
 require forth-libs/string.fs
 
-0 \ password structure
-dup constant password->min     1 cells +
-dup constant password->max     1 cells +
-dup constant password->letter  1 cells +
-dup constant password->phrase  1 cells +
-constant password:struct
+begin-structure password:struct
+  field: password:min
+  field: password:max
+  field: password:letter
+  field: password:phrase
+end-structure
 
-: password:min      password->min + ;
-: password:max      password->max + ;
-: password:letter   password->letter + ;
-: password:phrase   password->phrase + ;
 : password:min@     password:min @ ;
 : password:max@     password:max @ ;
 : password:letter@  password:letter @ ;
