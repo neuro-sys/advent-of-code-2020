@@ -8,17 +8,13 @@ begin-structure password:struct
   field: password:phrase
 end-structure
 
-: password:min@     password:min @ ;
-: password:max@     password:max @ ;
-: password:letter@  password:letter @ ;
-: password:phrase@  password:phrase @ ;
 : password:allocate password:struct allocate throw ;
 
 : password:expand { password -- min max letter phrase }
-  password password:min@
-  password password:max@
-  password password:letter@
-  password password:phrase@
+  password password:min @
+  password password:max @
+  password password:letter @
+  password password:phrase @
 ;
 
 : password:valid? { password -- t }
