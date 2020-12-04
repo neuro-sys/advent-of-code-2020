@@ -8,7 +8,7 @@ include forth-libs/string.fs
 
   begin
     x width y xy>i
-    map string:length@ <
+    map string:length @ <
   while
     x width y xy>i { i }
     map i string:nth { c }

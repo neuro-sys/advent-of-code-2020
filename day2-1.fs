@@ -25,7 +25,7 @@ end-structure
 
   letter 0 string:nth to letter
 
-  phrase string:length@ 0 ?do
+  phrase string:length @ 0 ?do
     phrase i string:nth { c }
 
     c letter = if
