@@ -156,18 +156,20 @@ end-structure
   valid?
 ;
 
+: ecl-eq? ( ecl caddr u -- t ) string:make string:compare true = ;
+
 : ecl-valid? ( ecl -- t )
   { ecl }
 
   ecl 0= if false exit then
 
-  ecl s" amb" string:make string:compare true =
-  ecl s" blu" string:make string:compare true = or
-  ecl s" brn" string:make string:compare true = or
-  ecl s" gry" string:make string:compare true = or
-  ecl s" grn" string:make string:compare true = or
-  ecl s" hzl" string:make string:compare true = or
-  ecl s" oth" string:make string:compare true = or
+  ecl s" amb" ecl-eq?
+  ecl s" blu" ecl-eq? or
+  ecl s" brn" ecl-eq? or
+  ecl s" gry" ecl-eq? or
+  ecl s" grn" ecl-eq? or
+  ecl s" hzl" ecl-eq? or
+  ecl s" oth" ecl-eq? or
 ;
 
 : pid-valid? ( pid -- t )
