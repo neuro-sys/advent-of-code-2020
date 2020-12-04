@@ -46,7 +46,7 @@ end-structure
   repeat
 
   eof? if
-    false true
+    passport-line true
     exit
   then
 
