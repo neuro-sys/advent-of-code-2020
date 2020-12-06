@@ -10,8 +10,8 @@ variable fd
 : load-file   open read close ;
 
 : 2020?       + 2020 = ;
-: find-match  begin 2dup @ 2020? if @ exit then dup @ 0<> while cell+ repeat drop false ;
-: find-pair   begin dup @ over find-match ?dup if rot drop exit else drop cell+ then again ;
+: find-match? begin 2dup @ 2020? if @ exit then dup @ 0<> while cell+ repeat drop false ;
+: find-pair   begin dup @ over find-match? ?dup if rot drop exit else drop cell+ then again ;
 : answer      load-file find-pair * u. ;
 
 answer
