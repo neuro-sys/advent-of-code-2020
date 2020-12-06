@@ -15,8 +15,8 @@ variable fd
 
 : 2020?       num1 + num2 + 2020 = ;
 : find-match? begin dup @ 2020? if @ exit then dup @ 0<> while cell+ repeat drop false ;
-: find-pair?  begin dup @ to num2 dup find-match? ?dup if to num3 @ to num2 true exit then dup @ 0<> while cell+ repeat drop false ;
-: find-triple begin dup @ to num1 dup find-pair? if @ to num1 exit then cell+ again ; 
+: find-pair?  begin dup @ to num2 dup find-match? ?dup if to num3 true exit then dup @ 0<> while cell+ repeat drop false ;
+: find-triple begin dup @ to num1 dup find-pair? if @ to num2 @ to num1 exit then cell+ again ; 
 
 load-file find-triple num1 num2 num3 * * u.
 
