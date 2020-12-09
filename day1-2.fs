@@ -1,23 +1,38 @@
-variable fd
-
-0 value num1
-0 value num2
-0 value num3
-
 : input-file  s" day1-input.txt" ;
 
-: fd>pad      pad 80 fd @ read-line throw drop ;
+\ takes fd as input and reads into 80 char pad area, returns number of
+\ chars read ( addr -- u )
+: fd>pad      pad 80 3 pick read-line throw drop ;
+
+\ takes fd as input, writes to current DP, and preserves fd and returns boolean
+\ indicating eof ( addr -- addr t )
 : read-line?  fd>pad ?dup if pad swap evaluate , false else true then ;
+
+\ takes fd as input, and returns dictionary data containing zero
+\ terminated cells ( addr -- addr addr)
 : read        here begin read-line? until 0 , ;
-: open        input-file r/o open-file throw fd ! ;
-: close       fd @ close-file throw ;
-: load-file   open read close ;
 
-: 2020?       num1 + num2 + 2020 = ;
-: find-match? begin dup @ 2020? if @ exit then dup @ 0<> while cell+ repeat drop false ;
-: find-pair?  begin dup @ to num2 dup find-match? ?dup if to num3 true exit then dup @ 0<> while cell+ repeat drop false ;
-: find-triple begin dup @ to num1 dup find-pair? if @ to num2 @ to num1 exit then cell+ again ; 
+( -- fd )
+: open        input-file r/o open-file throw ;
 
-load-file find-triple num1 num2 num3 * * u.
+( addr -- )
+: close       close-file throw ;
+
+( -- addr )
+: load-file   open read swap close ;
+
+( num1 num2 num3 -- t )
+: 2020?       + + 2020 - 0= ;
+
+( num1 num2 addr --- num3 t ) 
+: find-match? begin dup @ 3 pick 3 pick 2020? if @ true exit then cell+ dup @ 0<> while repeat 2drop drop false ;
+
+( num1 addr --- num2 num3 t ) 
+: find-pair?  begin dup @ 2 pick 2 pick find-match? if true exit then cell+ dup @ 0<> while repeat drop false ;
+
+( addr --- num1 num2 num3 ) 
+: find-triple begin dup @ over find-pair? if 3 roll drop 3 roll drop exit then drop cell+ again ;
+
+load-file find-triple * * u. drop
 
 bye
