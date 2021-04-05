@@ -1,114 +1,49 @@
-require forth-libs/list.fs
-require forth-libs/string.fs
+variable fd
+variable nread
+variable min
+variable max
+variable letter
 
-begin-structure password:struct
-  field: password:min
-  field: password:max
-  field: password:letter
-  field: password:phrase
-end-structure
+: input-file      s" day2-input.txt" ;
+: open-file       input-file r/o open-file throw fd ! ;
+: close-file      fd @ close-file throw ;
+: read-line?      pad 80 fd @ read-line throw drop dup nread ! ;
+: get-line        pad nread @ ;
+: 1/search        search 0= throw 1 /string ;
+: skip-dash       s" -" 1/search ;
+: skip-space      s"  " 1/search ;
+: skip-:          s" :" 1/search ;
+: parse-min       get-line skip-dash drop 1- pad - pad swap 0. 2swap >number 2drop drop  ;
+: parse-max       get-line skip-dash over >r skip-space drop 1- r@ - r> swap
+                  0. 2swap >number 2drop drop ;
+: parse-letter    get-line skip-space over >r skip-: drop 1- r@ - r> swap drop c@ ;
 
-: password:allocate password:struct allocate throw ;
-
-: password:expand { password -- min max letter phrase }
-
-  password password:min @
-  password password:max @
-  password password:letter @
-  password password:phrase @
-;
-
-: password:valid? { password -- t }
-  0 { count }  \ number of occurance of letter
-
-  password password:expand { min max letter phrase }
-
-  letter 0 string:nth to letter
-
-  phrase string:length @ 0 ?do
-    phrase i string:nth { c }
-
-    c letter = if
-      count 1+ to count
-    then
-  loop
-
-  count min >=
-  count max <=
-  and
-;
-
-: password:make { min max letter phrase -- password }
-  password:allocate { password }
-
-  min    password password:min !
-  max    password password:max !
-  letter password password:letter !
-  phrase password password:phrase !
-
-  password
-;
-
-\ parse string with format "a-b" into min max
-: parse-min-max { string -- min max }
-
-  [char] - string string:tokenize { range-tokens }
-  range-tokens 0 list:nth { min }
-  min string:to-number drop to min
-
-  range-tokens 1 list:nth { max }
-  max string:to-number drop to max
-
-  min max
-;
-
-\ parse string with format "a:" into letter
-: parse-letter { string -- letter }
-  [char] : string string:tokenize { letter-tokens }
-
-  letter-tokens 0 list:nth
-;
-
-\ parse string with format "a-b c: def" into password
-: parse-password { line -- password }
-  bl line string:tokenize { tokens }
-
-  tokens 0 list:nth parse-min-max { min max }
-  tokens 1 list:nth parse-letter { letter }
-  tokens 2 list:nth { phrase }
-
-  min max letter phrase password:make
-;
-
-: read-passwords { filename -- passwords }
-  list:make { passwords }
-  256 { bufsiz }
-  bufsiz allocate throw { line-buf }
-
-  filename string:raw r/o open-file throw { fd }
+: check-valid?
+  get-line skip-space skip-space
+  0 >r
   begin
-    line-buf bufsiz fd read-line throw
+    dup 0<>
   while
-    { readn }
-
-    line-buf readn string:make { line }
-
-    line parse-password { password }
-
-    passwords password list:append to passwords
-
-  repeat drop \ readn
-
-  line-buf free
-  passwords
+    over c@ letter c@ = if r> 1+ >r then
+    1 /string
+  repeat
+  2drop
+  r@ min @ >=
+  r> max @ <= and
 ;
 
-: answer
-  s" day2-input.txt" string:make read-passwords { passwords }
-
-  passwords 0 [: password:valid? if 1+ then ;] list:reduce .
+: solve
+  open-file
+  0
+  begin
+    read-line?
+  while
+    parse-min min !
+    parse-max max !
+    parse-letter letter !
+    check-valid? if 1+ then
+  repeat
+  close-file
 ;
 
-answer
-
-bye
+solve . bye
