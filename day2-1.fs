@@ -13,9 +13,9 @@ variable letter
 : skip-dash       s" -" 1/search ;
 : skip-space      s"  " 1/search ;
 : skip-:          s" :" 1/search ;
-: parse-min       get-line skip-dash drop 1- pad - pad swap 0. 2swap >number 2drop drop  ;
+: parse-min       get-line skip-dash drop 1- pad - pad swap 0 0 2swap >number 2drop drop ;
 : parse-max       get-line skip-dash over >r skip-space drop 1- r@ - r> swap
-                  0. 2swap >number 2drop drop ;
+                  0 0 2swap >number 2drop drop ;
 : parse-letter    get-line skip-space over >r skip-: drop 1- r@ - r> swap drop c@ ;
 
 : check-valid?
@@ -46,4 +46,4 @@ variable letter
   close-file
 ;
 
-solve . bye
+solve .

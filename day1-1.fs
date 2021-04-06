@@ -13,5 +13,3 @@
 : answer      load-file find-pair * u. ;
 
 answer
-bye
-

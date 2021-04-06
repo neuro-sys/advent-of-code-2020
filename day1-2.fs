@@ -34,5 +34,3 @@
 : find-triple begin dup @ over find-pair? if 3 roll drop 3 roll drop exit then drop cell+ again ;
 
 load-file find-triple * * u. drop
-
-bye
