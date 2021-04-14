@@ -19,17 +19,17 @@ variable letter
 : parse-letter    line skip-space over >r skip-: drop 1- r@ - r> swap drop c@ ;
 : in-range?       min @ >= swap max @ <= and ;
 : letter-eq?      over c@ letter c@ = ;
-: inc-count       postpone r> postpone 1+ postpone >r ; immediate
+: inc-count       rot 1+ -rot ;
 : skip-letter     1 /string ;
 
 : check-valid?
+  0 ( count )
   line skip-space skip-space
-  0 >r
   begin ?dup 0<>
   while
     letter-eq? if inc-count then skip-letter
   repeat drop
-  r@ r> in-range?
+  dup in-range?
 ;
 
 : solve
